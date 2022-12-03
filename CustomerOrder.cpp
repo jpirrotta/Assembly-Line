@@ -3,7 +3,6 @@
 // jpirrotta@myseneca.ca
 // Finished November 10th 2022
 // I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
-
 #include "CustomerOrder.h"
 #include "Utilities.h"
 #include <iomanip>
@@ -17,34 +16,27 @@ namespace sdds {
         Utilities util;
         size_t next_pos = 0;
         bool more = true;
-        Item *temp[this->m_cntItem];
+        std::string name;
+
         m_name = util.extractToken(str, next_pos, more);
-        m_product = util.extractToken(str, next_pos, more);
-        m_cntItem = 0;
-        while (more) {
-            //Copy the current item into the temp array
-            for (int i = 0; i < m_cntItem; i++) {
-                temp[i] = m_lstItem[i];
+        if (more) {
+            m_product = util.extractToken(str, next_pos, more);
+            m_cntItem = 0;
+            while (more) {
+                name = util.extractToken(str, next_pos, more);
+                name.erase(0, name.find_first_not_of(' '));
+                name.erase(name.find_last_not_of(' ') + 1);
+                //m_lstItem.push_back(new Item(name)); //Did not work, switched to smart pointer style
+                m_lstItem.push_back(std::make_unique<Item>(name));
+
+                m_cntItem++;
             }
 
-            //Create a new item with one more element
-            m_lstItem = new Item *[m_cntItem + 1];
-
-            //Copy the temp array back into our array
-            for (int i = 0; i < m_cntItem; i++) {
-                m_lstItem[i] = temp[i];
+            if (util.getFieldWidth() > m_widthField) {
+                m_widthField = util.getFieldWidth();
             }
-
-            //Add the newest item to the last array
-            m_lstItem[m_cntItem + 1] = new Item(util.extractToken(str, next_pos, more));
-
-            //Increment the counter
-            m_cntItem++;
         }
 
-        if (util.getFieldWidth() > m_widthField) {
-            m_widthField = util.getFieldWidth();
-        }
     }
 
     CustomerOrder::CustomerOrder(CustomerOrder &&mv) noexcept {
@@ -60,14 +52,10 @@ namespace sdds {
             mv.m_name = "";
             mv.m_product = "";
             mv.m_cntItem = 0;
-            mv.m_lstItem = nullptr;
         }
         return *this;
     }
 
-    CustomerOrder::~CustomerOrder() {
-        delete[] m_lstItem;
-    }
 
     bool CustomerOrder::isOrderFilled() const {
         bool filled = true;
@@ -115,15 +103,21 @@ namespace sdds {
         for (size_t i = 0; i < m_cntItem; i++) {
             os << "[" << std::setw(6) << std::setfill('0') << m_lstItem[i]->m_serialNumber << "] ";
             os << std::setw(m_widthField);
-            os << std::setfill(' ') << m_lstItem[i]->m_itemName << "   - ";
+            os << std::setfill(' ') << std::left << m_lstItem[i]->m_itemName << "   - ";
             if (m_lstItem[i]->m_isFilled) {
-                os << "FILLED" << std::endl;
+                os << "FILLED";
             } else {
-                os << "TO BE FILLED" << std::endl;
+                os << "TO BE FILLED";
             }
             os << std::endl;
         }
     }
+
+//    CustomerOrder::~CustomerOrder() {
+//        for (size_t i = 0; i < m_lstItem.size(); i++) {
+//            delete m_lstItem[i];
+//        }
+//    }
 
 
 } // sdds

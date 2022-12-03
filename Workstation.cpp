@@ -25,7 +25,7 @@ namespace sdds {
         if (this->m_orders.empty()) { //if there are no orders
             return false;
             //If the order is filled or there is no inventory
-        } else if (this->m_orders.front().isOrderFilled() || getQuantity() <= 0) {
+        } else if (this->m_orders.front().isItemFilled(getItemName()) || getQuantity() <= 0) {
             //if there is a next station
             if (this->m_pNextStation != nullptr) {
                 *this->m_pNextStation += std::move(this->m_orders.front());
@@ -44,9 +44,10 @@ namespace sdds {
                     g_incomplete.push_back(std::move(m_orders.front()));
                     m_orders.pop_front();
                 }
+                return true;
             }
-            return false;
         }
+        return false;
     }
 
     void Workstation::setNextStation(Workstation *station) {

@@ -28,7 +28,9 @@ namespace sdds {
         std::string m_name;
         std::string m_product;
         size_t m_cntItem;
-        Item **m_lstItem;
+        //Item **m_lstItem; //Changed to vector
+        //std::vector<Item *> m_lstItem; //Changed to smrtptr after too many mem leaks
+        std::vector<std::unique_ptr<Item>> m_lstItem;
 
         //Class Variables
         static size_t m_widthField;
@@ -46,8 +48,6 @@ namespace sdds {
         CustomerOrder(CustomerOrder &&mv) noexcept;
 
         CustomerOrder &operator=(CustomerOrder &&mv) noexcept;
-
-        ~CustomerOrder();
 
         bool isOrderFilled() const;
 
