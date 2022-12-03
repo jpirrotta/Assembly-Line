@@ -14,7 +14,7 @@ namespace sdds {
 
         //Utils Properties
         Utilities utils; //Utils object to enable getting of tokens
-        bool more; //More flag to determine if there are more flags in a line
+        bool more = true; //More flag to determine if there are more flags in a line
         std::string line; //Line to be read from the file
         size_t next_pos = 0; //Starting POS
 
