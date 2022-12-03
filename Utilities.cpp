@@ -57,7 +57,7 @@ namespace sdds {
         return token;
     }
 
-    void Utilities::setDelimiter(const char delimiter) {
+    void Utilities::setDelimiter(char delimiter) {
         m_delimiter = delimiter;
     }
 

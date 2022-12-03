@@ -23,7 +23,7 @@ namespace sdds {
 
         std::string extractToken(const std::string &str, std::size_t &next_pos, bool &more);
 
-        static void setDelimiter(const char delimiter);
+        static void setDelimiter(char delimiter);
 
         static const char getDelimiter();
     };

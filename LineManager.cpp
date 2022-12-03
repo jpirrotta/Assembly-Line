@@ -1,7 +1,9 @@
-//
-// Created by jesse on 2022-12-02.
-//
-
+// Jesse Pirrotta
+// 169115219
+// jpirrotta@myseneca.ca
+// Finished December 2nd 2022
+// I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+//Luca Casola helped me figure out the sorting.
 #include "LineManager.h"
 #include "Utilities.h"
 #include <fstream>
@@ -14,17 +16,19 @@ namespace sdds {
 
         //Utils Properties
         Utilities utils; //Utils object to enable getting of tokens
-        bool more = true; //More flag to determine if there are more flags in a line
         std::string line; //Line to be read from the file
-        size_t next_pos = 0; //Starting POS
 
 
         try {
-            utils.setDelimiter('|');
             if (!fstr.is_open()) {
                 throw std::string("File not found");
             }
+            sdds::Utilities::setDelimiter('|');
+
             while (!fstr.eof()) {
+                size_t next_pos = 0; //Starting POS
+                bool more = true; //More flag to determine if there are more flags in a line
+
                 std::string station;
                 std::string nextStation;
 
@@ -80,12 +84,12 @@ namespace sdds {
 
         sorted.push_back(m_firstStation);
 
-        for (size_t i = 0; i <= m_activeLine.size(); i++) {
-            for (size_t j = 0; j <= m_activeLine.size(); j++) {
-                if (sorted.back()->getNextStation() == m_activeLine[j]) {
-                    sorted.push_back(m_activeLine[j]);
-                    j = m_activeLine.size() + 1;
-                }
+
+        //Recieved help from fellow student Luca Casola
+        for (size_t j = 1; j <= m_activeLine.size(); j++) {
+            if (sorted.back()->getNextStation() == m_activeLine[j-1]) {
+                sorted.push_back(m_activeLine[j-1]);
+                j = 0;
             }
         }
 

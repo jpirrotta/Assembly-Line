@@ -16,7 +16,7 @@ namespace sdds {
     }
 
     void Workstation::fill(std::ostream &os) {
-        if (!this->m_orders.empty() && !this->m_orders.front().isOrderFilled()) {
+        if (!this->m_orders.empty()) {
             this->m_orders.front().fillItem(*this, os);
         }
     }

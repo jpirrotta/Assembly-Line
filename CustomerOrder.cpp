@@ -62,6 +62,7 @@ namespace sdds {
         for (size_t i = 0; i < m_cntItem; i++) {
             if (!m_lstItem[i]->m_isFilled) {
                 filled = false;
+                i = m_cntItem;
             } else
                 filled = true;
         }
@@ -81,17 +82,19 @@ namespace sdds {
     void CustomerOrder::fillItem(Station &station, std::ostream &os) {
         bool filled = false;
         for (size_t i = 0; i < m_cntItem && !filled; i++) {
-            if (m_lstItem[i]->m_itemName == station.getItemName()) {
-                if (station.getQuantity() > 0) {
-                    station.updateQuantity();
-                    m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
-                    m_lstItem[i]->m_isFilled = true;
-                    os << "    Filled " << m_name << ", " << m_product << " [" << m_lstItem[i]->m_itemName << "]"
-                       << std::endl;
-                    filled = true;
-                } else {
-                    os << "    Unable to fill " << m_name << ", " << m_product << " [" << m_lstItem[i]->m_itemName
-                       << "]" << std::endl;
+            if (station.getItemName() == m_lstItem[i]->m_itemName && !m_lstItem[i]->m_isFilled) {
+                if (m_lstItem[i]->m_itemName == station.getItemName()) {
+                    if (station.getQuantity() > 0) {
+                        station.updateQuantity();
+                        m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
+                        m_lstItem[i]->m_isFilled = true;
+                        os << "    Filled " << m_name << ", " << m_product << " [" << m_lstItem[i]->m_itemName << "]"
+                           << std::endl;
+                        filled = true;
+                    } else {
+                        os << "    Unable to fill " << m_name << ", " << m_product << " [" << m_lstItem[i]->m_itemName
+                           << "]" << std::endl;
+                    }
                 }
             }
         }
@@ -101,7 +104,7 @@ namespace sdds {
         os << m_name << " - " << m_product << std::endl;
 
         for (size_t i = 0; i < m_cntItem; i++) {
-            os << "[" << std::setw(6) << std::setfill('0') << m_lstItem[i]->m_serialNumber << "] ";
+            os << "[" << std::setw(6) << std::setfill('0')<< std::right << m_lstItem[i]->m_serialNumber << "] ";
             os << std::setw(m_widthField);
             os << std::setfill(' ') << std::left << m_lstItem[i]->m_itemName << "   - ";
             if (m_lstItem[i]->m_isFilled) {
